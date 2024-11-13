@@ -1,0 +1,29 @@
+version: 2
+models:
+  - name: stg_customers
+    description: "{{ doc('customers') }}"
+    config:
+     schema: "{{env_var('DBT_STAGESCHEMA', 'STAGING') }}"
+    columns:
+      - name: customerid
+        tests:
+          - unique
+          - not_null
+ 
+  - name: stg_orders
+    description: "{{ doc('orders') }}"
+    config:
+     schema: "{{env_var('DBT_STAGESCHEMA', 'STAGING') }}"
+    columns:
+      - name: orderid
+        tests:
+          - unique
+          - not_null
+ 
+      - name: customerid
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customerid
+  
